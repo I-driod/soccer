@@ -8,6 +8,7 @@ class OnboardingState extends Equatable {
   final bool isFormValid;
   final LoginStatus? status;
   final String emailError;
+  final String passwordError;
 
   const OnboardingState({
     required this.currentSlide,
@@ -17,6 +18,7 @@ class OnboardingState extends Equatable {
     this.isFormValid = false,
     this.status = LoginStatus.initial,
     this.emailError = '',
+    this.passwordError = '',
   });
 
   OnboardingState copyWith({
@@ -27,6 +29,7 @@ class OnboardingState extends Equatable {
     bool? isFormValid,
     LoginStatus? status,
     String? emailError,
+    String? passwordError,
   }) {
     return OnboardingState(
       currentSlide: currentSlide ?? this.currentSlide,
@@ -36,11 +39,22 @@ class OnboardingState extends Equatable {
       isFormValid: isFormValid ?? this.isFormValid,
       status: status ?? this.status,
       emailError: emailError ?? this.emailError,
+      passwordError: passwordError ?? this.passwordError,
     );
   }
 
   @override
-  List<Object> get props => [currentSlide];
+  @override
+  List<Object> get props => [
+    currentSlide,
+    email,
+    password,
+    isPasswordVisible,
+    isFormValid,
+    ?status,
+    emailError,
+    passwordError,
+  ];
 }
 
 enum LoginStatus { initial, loading, success, failure }

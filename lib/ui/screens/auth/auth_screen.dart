@@ -71,15 +71,14 @@ class AuthScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(9.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
                           children: [
+                            SizedBox(height: 20),
                             Text(
                               'Enter your account details to access profile',
                             ),
-                            Text("appLocalization.pleaseEnterEmail"),
-                            const SizedBox(height: 40),
-
-                            Text("     // appLocalization.email,"),
-
+                            SizedBox(height: 20),
                             TextFormField(
                               onChanged: (value) =>
                                   onboardingCubit.emailChanged(value),
@@ -87,46 +86,41 @@ class AuthScreen extends StatelessWidget {
                                   ? state.emailError
                                   : null,
                               decoration: InputDecoration(
-                                labelText: appLocalization.enterYourEmail,
-                                hintStyle: AppStyles.bodyLargeRegular,
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                prefixIcon: Image.asset(AppIcons.message),
+                                labelText: "Email Address",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                labelStyle: TextStyle(color: Color(0xFFC1C0C3)),
                               ),
                             ),
                             const SizedBox(height: 20),
-                            Text(
-                              appLocalization.password,
-                              style: AppStyles.bodyXLargeSemibold,
-                            ),
-                            SizedBox(height: AppSizes.getSize8(context)),
+                            Text(" appLocalization.password"),
+                            SizedBox(height: 20),
                             // Password Input
                             TextFormField(
                               decoration: InputDecoration(
-                                labelText: appLocalization.enterPass,
+                                labelText: "Password",
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                                 errorText: state.passwordError.isNotEmpty
                                     ? state.passwordError
                                     : null,
-                                prefixIcon: Image.asset(AppIcons.lock),
+
                                 suffixIcon: InkWell(
-                                  onTap: () => context
-                                      .read<LoginCubit>()
-                                      .toggleVisibility(),
+                                  onTap: () =>
+                                      onboardingCubit.toggleVisibility(),
                                   child: state.isPasswordVisible
-                                      ? Image.asset(AppIcons.eyeShow)
-                                      : Image.asset(AppIcons.eyeHide),
+                                      ? Icon(Icons.visibility_sharp)
+                                      : Icon(Icons.visibility_off_outlined),
                                 ),
                               ),
-                              style: AppStyles.bodyXLargeSemibold,
+
                               enableSuggestions: false,
                               autocorrect: false,
                               obscuringCharacter: '●',
                               obscureText: !state.isPasswordVisible,
-                              onChanged: (value) => context
-                                  .read<LoginCubit>()
-                                  .passwordChanged(value),
+                              onChanged: (value) =>
+                                  onboardingCubit.passwordChanged(value),
                             ),
                           ],
                         ),
@@ -144,19 +138,3 @@ class AuthScreen extends StatelessWidget {
     ;
   }
 }
-
-// TabContainer(
-// controller: _controller,
-// borderRadius: BorderRadius.zero,
-// tabBorderRadius: BorderRadius.zero,
-// color: Colors.black,
-// duration: const Duration(seconds: 0),
-// selectedTextStyle: textTheme.bodyMedium?.copyWith(
-// color: Colors.white,
-// ),
-// unselectedTextStyle: textTheme.bodyMedium?.copyWith(
-// color: Colors.black,
-// ),
-// tabs: _getTabs2(),
-// children: _getChildren2(),
-// ),

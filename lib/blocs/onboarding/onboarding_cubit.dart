@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:soccers/blocs/onboarding/onboarding_state.dart';
 
@@ -45,7 +44,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
   String _validateEmail(String emailOrPhone) {
     if (emailOrPhone.isEmpty) {
-      return 'Email or phone is required';
+      return 'Oops! email is invalid';
     }
 
     return '';
@@ -65,5 +64,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
   void clearErrors() {
     emit(state.copyWith(emailError: '', status: LoginStatus.initial));
+  }
+
+  void toggleVisibility() {
+    emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
+  }
+
+  void passwordChanged(String password) {
+    emit(
+      state.copyWith(
+        password: password,
+        passwordError: _validatePassword(password),
+      ),
+    );
+    _validateForm();
   }
 }
