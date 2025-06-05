@@ -2,10 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:soccers/blocs/onboarding/onboarding_state.dart';
 
+import '../../repositories/auth_repository.dart';
 import '../../ui/screens/auth/auth_screen.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {
-  OnboardingCubit() : super(const OnboardingState(currentSlide: 1));
+  final AuthRepository authRepository;
+
+  OnboardingCubit(this.authRepository)
+    : super(const OnboardingState(currentSlide: 1));
 
   final PageController controller = PageController();
 
@@ -78,5 +82,30 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       ),
     );
     _validateForm();
+  }
+
+  Future<void> login() async {
+    if (state.emailError.isEmpty &&
+        state.passwordError.isEmpty &&
+        state.email.isNotEmpty &&
+        state.password.isNotEmpty) {
+      emit(state.copyWith(status: LoginStatus.loading));
+
+      try {
+        final response = await authRepository.login(
+          state.email,
+          state.password,
+        );
+
+        emit(state.copyWith(status: LoginStatus.success));
+      } catch (e) {
+        emit(
+          state.copyWith(
+            errorMessage: e.toString(),
+            status: LoginStatus.failure,
+          ),
+        );
+      }
+    }
   }
 }

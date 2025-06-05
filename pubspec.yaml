@@ -40,6 +40,10 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   flutter_svg: ^2.1.0
   tab_container: ^3.5.3
+  firebase_core: ^3.13.1
+  dio: ^5.8.0+1
+  firebase_auth: ^5.5.4
+  logger: ^2.5.0
 
 dev_dependencies:
   flutter_test:

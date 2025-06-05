@@ -9,6 +9,7 @@ class OnboardingState extends Equatable {
   final LoginStatus? status;
   final String emailError;
   final String passwordError;
+  final String errorMessage;
 
   const OnboardingState({
     required this.currentSlide,
@@ -19,6 +20,7 @@ class OnboardingState extends Equatable {
     this.status = LoginStatus.initial,
     this.emailError = '',
     this.passwordError = '',
+    this.errorMessage = '',
   });
 
   OnboardingState copyWith({
@@ -30,6 +32,7 @@ class OnboardingState extends Equatable {
     LoginStatus? status,
     String? emailError,
     String? passwordError,
+    String? errorMessage,
   }) {
     return OnboardingState(
       currentSlide: currentSlide ?? this.currentSlide,
@@ -40,6 +43,7 @@ class OnboardingState extends Equatable {
       status: status ?? this.status,
       emailError: emailError ?? this.emailError,
       passwordError: passwordError ?? this.passwordError,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
@@ -54,6 +58,7 @@ class OnboardingState extends Equatable {
     ?status,
     emailError,
     passwordError,
+    errorMessage,
   ];
 }
 

@@ -11,7 +11,16 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OnboardingCubit, OnboardingState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state.status == LoginStatus.failure &&
+            state.errorMessage.isNotEmpty) {
+          // ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          context.read<OnboardingCubit>().clearErrors();
+        }
+      },
       builder: (context, state) {
         final onboardingCubit = context.read<OnboardingCubit>();
         return Scaffold(
@@ -41,6 +50,7 @@ class AuthScreen extends StatelessWidget {
               ),
 
               Expanded(
+                flex: 3,
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
                   margin: const EdgeInsets.all(8.0),
@@ -79,49 +89,33 @@ class AuthScreen extends StatelessWidget {
                               'Enter your account details to access profile',
                             ),
                             SizedBox(height: 20),
-                            TextFormField(
+
+                            AppTextField(
                               onChanged: (value) =>
                                   onboardingCubit.emailChanged(value),
-                              forceErrorText: state.emailError.isNotEmpty
+                              labelText: "Email Address",
+                              errorText: state.emailError.isNotEmpty
                                   ? state.emailError
                                   : null,
-                              decoration: InputDecoration(
-                                labelText: "Email Address",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                labelStyle: TextStyle(color: Color(0xFFC1C0C3)),
-                              ),
                             ),
                             const SizedBox(height: 20),
-                            Text(" appLocalization.password"),
-                            SizedBox(height: 20),
-                            // Password Input
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: "Password",
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                errorText: state.passwordError.isNotEmpty
-                                    ? state.passwordError
-                                    : null,
-
-                                suffixIcon: InkWell(
-                                  onTap: () =>
-                                      onboardingCubit.toggleVisibility(),
-                                  child: state.isPasswordVisible
-                                      ? Icon(Icons.visibility_sharp)
-                                      : Icon(Icons.visibility_off_outlined),
-                                ),
+                            AppTextField(
+                              labelText: "Password",
+                              suffixIcon: InkWell(
+                                onTap: () => onboardingCubit.toggleVisibility(),
+                                child: state.isPasswordVisible
+                                    ? Icon(Icons.visibility_sharp)
+                                    : Icon(Icons.visibility_off_outlined),
                               ),
-
-                              enableSuggestions: false,
-                              autocorrect: false,
-                              obscuringCharacter: '●',
-                              obscureText: !state.isPasswordVisible,
+                              errorText: state.passwordError.isNotEmpty
+                                  ? state.passwordError
+                                  : null,
+                              isPasswordVisible: !state.isPasswordVisible,
                               onChanged: (value) =>
                                   onboardingCubit.passwordChanged(value),
                             ),
+
+                            // AppTextField(onboardingCubit: onboardingCubit),
                           ],
                         ),
                       ),
@@ -130,11 +124,70 @@ class AuthScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              Container(
+                padding: EdgeInsets.all(8),
+                width: double.infinity,
+                child: FilledButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Color(0xFF5B44F0)),
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    onboardingCubit.login();
+                  },
+                  child: Text('Continue'),
+                ),
+              ),
+              Expanded(child: SizedBox()),
             ],
           ),
         );
       },
     );
     ;
+  }
+}
+
+class AppTextField extends StatelessWidget {
+  const AppTextField({
+    super.key,
+    this.errorText,
+    this.suffixIcon,
+
+    this.isPasswordVisible,
+    this.onChanged,
+    this.labelText,
+  });
+
+  final String? errorText;
+  final Widget? suffixIcon;
+
+  final bool? isPasswordVisible;
+  final Function(String)? onChanged;
+  final String? labelText;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: labelText,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        errorText: errorText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+
+        suffixIcon: suffixIcon,
+      ),
+
+      enableSuggestions: false,
+      autocorrect: false,
+      obscuringCharacter: '●',
+      obscureText: isPasswordVisible ?? false,
+
+      onChanged: onChanged,
+    );
   }
 }
