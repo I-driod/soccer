@@ -19,4 +19,20 @@ class AuthApiService {
       throw e.toString();
     }
   }
+
+  // Future<List<Team>> fetchTeams() async {
+  //   final querySnapshot = await FirebaseFirestore.instance
+  //       .collection('teams')
+  //       .get();
+  //
+  //   try {
+  //     return querySnapshot.docs.map((doc) => Team.fromMap(doc.data())).toList();
+  //   } on FirebaseException catch (e) {
+  //     // Re-throw the exception to be handled at a higher level
+  //     throw e.code;
+  //   } catch (e) {
+  //     // Re-throw any other exceptions
+  //     throw e.toString();
+  //   }
+  // }
 }

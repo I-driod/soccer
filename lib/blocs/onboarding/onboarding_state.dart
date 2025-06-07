@@ -48,7 +48,6 @@ class OnboardingState extends Equatable {
   }
 
   @override
-  @override
   List<Object> get props => [
     currentSlide,
     email,
